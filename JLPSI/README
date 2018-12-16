@@ -1,0 +1,13 @@
+### 第一步：安装node
+https://nodejs.org/en/download/
+nodejs官网，安装一个版本即可
+
+### 用命令行进入文件夹
+
+### 启动
+
+node start.js
+
+### 然后在浏览器中打开
+http://127.0.0.1:2000/JLPSI/index.html 即可
+最好是谷歌浏览器

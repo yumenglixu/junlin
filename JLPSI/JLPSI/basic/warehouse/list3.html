@@ -1,0 +1,1170 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+		<meta charset="utf-8" />
+		<title>销售订单作废审核</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+		<link rel="stylesheet" href="/JLPSI/junlin/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/JLPSI/junlin/css/ace.min.css" />
+		<link rel="stylesheet" href="/JLPSI/junlin/css/style.css" />
+		<link rel="stylesheet" href="/JLPSI/junlin/css/style_i.css" />
+		<link rel="stylesheet" href="/JLPSI/junlin/font/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="/JLPSI/junlin/js/layer3.1.1/theme/default/layer.css" />
+		<!--[if IE 7]>
+		  <link rel="stylesheet" href="/JLPSI/junlin/font/css/font-awesome-ie7.min.css" />
+		  <link rel="stylesheet" href="/JLPSI/junlin/css/ace-ie.min.css" />
+		<![endif]-->
+
+		<link rel="stylesheet" href="/JLPSI/junlin/css/mine/all.css" />
+		<link rel="stylesheet" href="/JLPSI/junlin/css/mine/public.css" />
+
+		<script src="/JLPSI/junlin/js/jquery-1.10.2.min.js"></script>
+		<!--<script src="/JLPSI/junlin/js/bootstrap.min.js"></script>-->
+		<script src="/JLPSI/junlin/js/typeahead-bs2.min.js"></script>
+		<script src="/JLPSI/junlin/js/jquery.dataTables.min.js"></script>
+		<script src="/JLPSI/junlin/js/jquery.dataTables.bootstrap.js"></script>
+		<script src="/JLPSI/junlin/js/layer3.1.1/layer.js" type="text/javascript"></script>
+		<script src="/JLPSI/junlin/js/laydate/laydate.js" type="text/javascript"></script>
+		<script src="/JLPSI/junlin/script/public.js" type="text/javascript"></script>
+		<script src="/JLPSI/junlin/js/date.js" type="text/javascript"></script>
+		<script src="/JLPSI/junlin/script/DetailBill-2.2.js" type="text/javascript"></script>
+		
+		
+		<link href="/JLPSI/junlin/js/jQuery-searchableSelect/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+	    <script src="/JLPSI/junlin/js/jQuery-searchableSelect/jquery.searchableSelect.js"></script>
+		<style>
+			#editDiv {
+				padding-top: 20px;
+			}
+			#editDiv .jl-panel{
+				position: relative;
+			}
+			#query_time{
+			width:190px
+			}
+		</style>
+	</head>
+
+	<body class="content" id="salesOrder_content">
+		<div class="page-content clearfix">
+			<div id="Member_Ratings">
+				<div class="d_Confirm_Order_style" style="margin-top:10px;">
+					<h4 class="text-title">销售订单作废审核</h4>
+					<div class="search-div clearfix">
+						<span class="l_f"> 
+								单号： <input type="text" value="" id="query_identifier"/>
+							</span>
+							<span class="l_f"> 
+								客户名称： <input type="text" value="" id="query_supctoId"/>
+							</span>
+							<span class="l_f"> 
+								货品名称： <input type="text"  value="" id="query_goodsName"/>
+							</span>
+							<span class="l_f" style="margin-left:19px"> 
+								起止时间： <input type="text"  value="" id="query_time" placeholder="请选择时间" readonly=""  />
+							</span>
+							<span class="r_f"> 
+								<input type="button"  class="btncss btn_search"  id="btn_search" value="搜索" />
+							</span>
+						</div>
+
+					</div>
+					<div class="opration-div clearfix">
+						<span class="r_f"> 
+							<button type="button" class="btncss jl-btn-defult" onclick="salesOrderTimes()"><i class="fa fa-times"></i> 驳回</button>
+						</span>
+						<span class="r_f"> 
+							<button type="button" class="btncss jl-btn-defult" onclick="salesOrderCheck()"><i class="fa fa-check"></i> 通过</button>
+						</span>
+						
+						<span class="jl_f_l">
+							<input type="checkbox" name="" id="checkAll" style="margin:0 5px 0 0;" onclick="checkboxController(this)"/>
+						</span>
+						<span class="jl_f_l">
+							<label for="checkAll">全选</label>
+						</span>
+					</div>
+					<div class="table_menu_list">
+						<table class="table table-striped table-hover col-xs-12" id="datatable">
+							<thead class="table-header">
+								<tr>
+									<th>选择</th>
+									<th>单号</th>
+									<th>客户</th>
+									<th>货品名称</th>
+									<th>结算方式</th>
+									<th>日期</th>
+									<th>有效期至</th>
+									<th>制单人</th>
+									<th>是否样品</th>
+									<th>状态</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--详情 -->
+		
+		<div id="lookDiv" style="display: none;">
+			<form class="container">
+				<div class="row jl-title">
+					<span>是否为样品单</span>
+				</div>
+				<div class="row jl-panel">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">是否为样品单:</label>
+							<div class="col-xs-8 look_is_specimen">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row jl-title">
+					<span>基本信息</span>
+				</div>
+				<div class="row jl-panel">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">生成时间:</label>
+							<div class="col-xs-8 look_create_time">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">客户:</label>
+							<div class="col-xs-8 look_supcto_id" >
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">有效期至:</label>
+							<div class="col-xs-8 look_end_validity_time">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">发货地点:</label>
+							<div class="col-xs-8 look_deliver_goods_place">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">收货人:</label>
+							<div class="col-xs-8 look_consignee">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">结算方式:</label>
+							<div class="col-xs-8 look_payment">
+							</div>
+						</div>
+						<div class="form-group hidden" id="look_advance_scale_div">
+							<label for="" class="col-xs-4 control-label">预收金额:</label>
+							<div class="col-xs-8 look_advance_scale">
+							</div>
+						</div>
+						
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">单号:</label>
+							<div class="col-xs-8 look_identifier">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">运输方式:</label>
+							<div class="col-xs-8 look_shipping_mode_id">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">联系电话:</label>
+							<div class="col-xs-8 look_phone">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">订货人:</label>
+							<div class="col-xs-8 look_orderer">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">收货地点:</label>
+							<div class="col-xs-8 look_receipt_goods_place">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">传真:</label>
+							<div class="col-xs-8 look_fax">
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				<div class="row jl-title">
+					<span>合计</span>
+				</div>
+				<div class="row jl-panel">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">发货数量:</label>
+							<div class="col-xs-8 look_all_deliver_goods_num" >
+							</div>
+						</div>
+						<!--<div class="form-group">
+							<label for="" class="col-xs-4 control-label">签收数量:</label>
+							<div class="col-xs-8">
+							</div>
+						</div>-->
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">金额:</label>
+							<div class="col-xs-8 look_all_deliver_goods_money" >
+							</div>
+						</div>
+						<!--<div class="form-group">
+							<label for="" class="col-xs-4 control-label">签收金额:</label>
+							<div class="col-xs-8">
+							</div>
+						</div>-->
+					</div>
+					<div class="col-xs-6">
+						<!--<div class="form-group">
+							<label for="" class="col-xs-4 control-label">返货数量:</label>
+							<div class="col-xs-8">
+							</div>
+						</div>-->
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">税额:</label>
+							<div class="col-xs-8 look_all_taxes_money">
+							</div>
+						</div>
+						<!--<div class="form-group">
+							<label for="" class="col-xs-4 control-label">折损数量:</label>
+							<div class="col-xs-8">
+							</div>
+						</div>-->
+					</div>
+				</div>
+				
+				<div class="row jl-title">
+					<span>商品</span>
+
+				</div>
+				<div id="allGoodsDiv_look">
+					
+
+				</div>
+				
+				<div class="row jl-title">
+					<span>其他</span>
+				</div>
+				<div class="row jl-panel">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">业务员:</label>
+							<div class="col-xs-8 look_person_id">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">审核人:</label>
+							<div class="col-xs-8 look_reviewer_id">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">分支机构:</label>
+							<div class="col-xs-8 look_branch">
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">部门:</label>
+							<div class="col-xs-8 look_department_id">
+							</div>
+
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">制单人:</label>
+							<div class="col-xs-8 look_originator">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">摘要:</label>
+							<div class="col-xs-8 look_summary">
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</form>
+
+		</div>
+		
+			
+		<!--编辑 -->
+		<div id="editDiv" style="display: none;">
+			<form class="container">
+				<div class="row jl-title">
+					<span>是否为样品单</span>
+				</div>
+				<div class="row jl-panel">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">是否为样品单</label>
+							<div class="col-xs-8">
+								<select class="form-control">
+									<option value="-1" selected="selected">--请选择--</option>
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row jl-title">
+					<span>基本信息</span>
+				</div>
+				<div class="row jl-panel">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">客户</label>
+							<div class="col-xs-8">
+								<input type="text" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">有效期至</label>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" id="effective_date" readonly="readonly" placeholder="请选择有效期" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">发货地点</label>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">收货人</label>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">传真</label>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">预收金额</label>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">结算方式</label>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">发货时间</label>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" id="send_time" readonly="readonly" placeholder="请选择发货时间"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">运输方式</label>
+							<div class="col-xs-8">
+								<select name="" class="form-control">
+									<option value="-1" selected="selected">--请选择--</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">联系电话</label>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">订货人</label>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row jl-title">
+					<span>合计</span>
+				</div>
+				<div class="row jl-panel">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">发货数量</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">签收数量</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">金额</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">签收金额</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">返货数量</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">税额</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">折损数量</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row jl-title">
+					<span>商品</span>
+					<b class="r_f" style="margin-top: 13px;">
+						<input type="button" class="btncss jl-btn-importent" onclick="goodsAdd()" value="新增" />
+					</b>
+					
+				</div>
+				
+
+				<div id="allGoodsDiv">
+					<!--<div class="row jl-panel" id="edit_goodDiv">
+						<div class="col-xs-6">
+							<div class="form-group">
+								<label for="edit_goods_name" class="col-xs-4 control-label">货品名称</label>
+								<div class="col-xs-8">
+									<select id="edit_goods_name" class="form-control">
+										      <option value="-1" selected="selected">--请选择商品--</option>
+										      <option value="123456">BlackBerry</option>
+										      <option value="23">device</option>
+										      <option value="34">with</option>
+										      <option value="35">entertainment</option>
+										      <option value="36">and</option>
+										      <option value="46">social</option>
+										      <option value="64">networking</option>
+										      <option value="6">apps</option>
+										   
+									</select>
+								</div>
+							</div>
+							
+							
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">单位</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control" readonly="readonly" placeholder="请先选择商品名称"/>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">返货数量</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control"/>
+								</div>
+							</div>
+							
+							
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">折扣%</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">税率</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">金额</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">签收金额</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-6">
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">规格</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control" readonly="readonly" placeholder="请先选择商品名称"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">发货数量</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">签收数量</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control"/>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">单价</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control"/>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">税额</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control"/>
+								</div>
+							</div>
+							
+							
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">折损金额</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control"/>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label for="" class="col-xs-4 control-label">备注</label>
+								<div class="col-xs-8">
+									<input type="text" value="" class="form-control"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					-->
+				
+				</div>
+				
+				<div class="row jl-title">
+					<span>其他</span>
+				</div>
+				<div class="row jl-panel">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">地区</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">业务员</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">审核人</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">分支机构</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">部门</label>
+							<div class="col-xs-8">
+								<select class="form-control">
+									<option value="-1">请选择</option>
+									<option value="01">000</option>
+								</select>
+							</div>
+							
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">制单人</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control" id="anb"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-xs-4 control-label">摘要</label>
+							<div class="col-xs-8">
+								<input type="text" value="" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="text-danger">注：该页面所有字段均为必填</div>
+			</form>
+
+		</div>
+		
+		
+		
+
+	</body>
+
+	<script>
+	laydate.render({
+		elem: "#query_time",
+		range:'~'
+	});
+	var oTable1;
+	$("#btn_search").click(function() {
+		
+		$("#checkAll").removeAttr("checked");
+		oTable1.fnDraw();
+	});
+	jQuery(function($) {
+		//datatable赋值
+		oTable1 = $('#datatable')
+			.dataTable({
+				"aaSorting": [
+					[0, "desc"]
+				], //默认第几个排序
+				"bStateSave": false, //状态保存
+				"bLengthChange": false, //改变每页显示数据数量
+				"bFilter": false, //列搜索
+				"iDisplayLength": 10, //默认每页显示的记录数
+				"iDisplayStart": 0,
+				"bServerSide": true, //是否开启服务端查询
+				"sDom": 't<"row"<"col-sm-6"i><"col-sm-6"p>>',
+				"ajax": {
+					"type": "post",
+					"dataType": "json",
+					"async": false,
+					"data": function(d) {
+						return $.extend({}, d, {
+							//添加额外的参数传给服务器(可以多个)
+							"page":12,
+							"identifier": $("#query_identifier").val(),
+							"commodityName": $("#query_goodsName").val(),
+							"supctoName": $("#query_supctoId").val(),
+							"isSpecimen":0,
+							"createTime": $("#query_time").val(),
+							"state": -1	
+								
+						});
+					},
+					"url": "/JLPSI/sales/salesOrder/getSalesOrderMsg"
+							},
+
+							"aoColumns" : [
+									{
+										"mData" : "id",
+										"bSortable" : false,
+										"sWidth" : "5%",
+										"sClass" : "center",
+										"mRender" : function(data, type, row) {
+											return '<td><input type="checkbox" name="id" value="'
+													+ row.id
+													+ '" onclick="checkboxClick(\'#checkAll\')"/></td>';
+										}
+									},
+								
+									{
+										"mData" : "identifier",
+										"bSortable" : false,
+										"sWidth" : "15%",
+										"sClass" : "center",
+										"mRender" : function(data, type, row) {
+											if(row.breakCode!=null&&row.breakCode>0){
+												return '<td><span class="look-span" onclick="salesOrderDetail('
+												+ row.id
+												+ ')">' + data + '-'+row.breakCode+'</span></td>';
+											}
+											else{
+												return '<td><span class="look-span" onclick="salesOrderDetail('
+												+ row.id
+												+ ')">'
+												+ data
+												+ '</span></td>';
+											}
+										}
+									},
+									{
+										"mData" : "supctoId",
+										"bSortable" : false,
+										"sWidth" : "10%",
+										"sClass" : "center",
+										"mRender" : function(data, type, row) {
+											if (row.supcto != null) {
+												return row.supcto.name;
+											} else {
+												return "";
+											}
+										}
+
+									},{
+										"mData" : "commoditysName",
+										"bSortable" : false,
+										"sWidth" : "10%",
+										"sClass" : "center"
+									},
+									{
+										"mData" : "payment",
+										"bSortable" : false,
+										"sWidth" : "10%",
+										"sClass" : "center",
+										"mRender" : function(data, type, row) {
+
+											switch (data) {
+											case 1:
+												return "预付款";
+												
+											case 2:
+												return "货到付款";
+												
+											case 3:
+												return "账期";
+												
+											default:
+												return "";
+												
+											}
+										}
+									},
+									{
+										"mData" : "createTime",
+										"bSortable" : false,
+										"sWidth" : "15%",
+										"sClass" : "center",
+										"mRender": function(data) {
+											return getSmpFormatDateByLong(data, true);
+										}
+
+									},
+									{
+										"mData" : "endValidityTime",
+										"bSortable" : false,
+										"sWidth" : "10%",
+										"sClass" : "center",
+										"mRender": function(data) {
+											return getSmpFormatDateByLong(data, false);
+										}
+
+									},{
+										"mData": "person.name",
+										"bSortable": false,
+										"sWidth": "10%",
+										"sClass": "center",
+										"mRender": function(data,type,row) {
+											if(data!=null&&data!=""){
+												if(row.person!=null){
+													return row.originator+"("+data+")";
+												}else{
+													return data;
+												}
+												
+											}
+											else{
+												return "";
+											}
+											
+										}
+									},{
+										"mData" : "isSpecimen",
+										"bSortable" : false,
+										"sWidth" : "10%",
+										"sClass" : "center",
+										"mRender": function(data) {
+											switch (data) {
+											case 1:
+												return "否";
+												
+											case 2:
+												return "是";
+												
+											default:
+												return "";
+												
+											}
+										}
+									},
+									{
+										"mData" : "state",
+										"bSortable" : false,
+										"sWidth" : "10%",
+										"sClass" : "center",
+										"mRender" : function(data, type, row) {
+
+											switch (data) {
+											case 1:
+												return "未送审";
+												break;
+											case 2:
+												return "订单待审核";
+												break;
+											case 3:
+												return "订单审核驳回";
+												break;
+											case 4:
+												return "待收预付款";
+												break;
+											case 5:
+												return "待打印备货单";
+												break;
+											case 6:
+												return "只需销售领导审核的作废待审核";
+												break;
+											case 7:
+												return "需仓库审核的作废之销售领导审核待审核";
+												break;
+											case 8:
+												return "仓库作废审核中";
+												break;
+											case 9:
+												return "作废审核驳回";
+												break;
+											case 10:
+												return "已作废";
+												break;
+											case 11:
+												return "备货中";
+												break;
+											case 12:
+												return "已出库";
+												break;
+											case 13:
+												return "销售开单待审核";
+												break;
+											case 14:
+												return "销售开单驳回";
+												break;
+											case 15:
+												return "已开单";
+												break;
+											case 16:
+												return "申请修改待审核";
+												break;
+											case 17:
+												return "申请修改审核驳回";
+												break;
+											case 18:
+												return "申请修改审核通过";
+												break;
+											case 19:
+												return "折损单待审核";
+												break;
+											case 20:
+												return "折损单审核驳回";
+												break;
+											case 21:
+												return "折损单审核通过";
+												break;
+											case 22:
+												return "销售开单折损单待审核";
+												break;
+											case 23:
+												return "销售开单折损单审核驳回";
+												break;
+											case 24:
+												return "可开单";
+												break;
+											case 25:
+												return "作废审核驳回";
+												break;
+											case 26:
+												return "已开返货单";
+												break;
+											default:
+												break;
+											}
+										}
+
+									},
+
+									{
+										"mData" : "id",
+										"bSortable" : false,
+										"sWidth" : "20%",
+										"sClass" : "center",
+										"mRender" : function(data, type, row) {
+											return '<td><input type="button" class="btncss edit" onclick="salesOrderDetail('
+											+data
+											+')" value="详情" /></td>'
+											
+											
+										}
+									} ],
+							"oLanguage" : {
+								// 国际化配置
+								"sLengthMenu" : "每页显示 _MENU_ 条记录",
+								"sZeroRecords" : "没有数据记录",
+								"sInfo" : "从 _START_ 到  _END_ 条记录 总记录数为 _TOTAL_ 条",
+								"sInfoEmpty" : "",
+								"sInfoFiltered" : "(全部记录数 _MAX_ 条)",
+								"oPaginate" : {
+									"sFirst" : "首页",
+									"sPrevious" : "前一页",
+									"sNext" : "后一页",
+									"sLast" : "尾页"
+								}
+							}
+						});
+			$("#btn_search").click(function() {
+				$("#checkAll").removeAttr("checked");
+				oTable1.fnDraw();
+			});
+		});
+	
+		/*驳回*/
+		function salesOrderTimes() {
+			var ids=[];
+			var boxes = $("input[name='id']");
+			for(var i=0;i<boxes.length;i++){
+		        if(boxes[i].checked == true){
+		            ids.push(boxes[i].value);
+		        }
+		    }
+			
+			if(ids.length<=0){
+				laywarn("请选择数据!");
+				return;
+			}
+	
+			publicMessageLayer("驳回所选订单的作废", function() {
+				$.ajax({
+					url :'/JLPSI/sales/salesOrder/updateStateByIds',
+					type: "POST",
+					dataType: "json",
+					async: false,
+					cache: false,
+					data: {
+						"ids" : ids,
+						"state" : 25,
+						"isCheck" : 1,
+						"reviewerType" : 3, 
+						"msg" : "操作成功，已驳回!"
+						
+					},
+					
+					traditional:true,
+					success: function(data) {
+						if(data.success) {
+							laysuccess(data.msg);
+							oTable1.fnDraw(false);
+							$("#checkAll").attr("checked",false);
+						} else {
+							layfail(data.msg);
+						}
+
+					}
+				});
+			})
+		}
+		/*通过*/
+		function salesOrderCheck() {
+			var ids=[];
+			var boxes = $("input[name='id']");
+			for(var i=0;i<boxes.length;i++){
+		        if(boxes[i].checked == true){
+		            ids.push(boxes[i].value);
+		        }
+		    }
+			
+			if(ids.length<=0){
+				laywarn("请选择数据!");
+				return;
+			}
+			publicMessageLayer("通过所选订单的作废", function() {
+				$.ajax({
+					url :'/JLPSI/sales/salesOrder/updateStateByIds',
+					type: "POST",
+					dataType: "json",
+					async: false,
+					cache: false,
+					data: {
+						"ids" : ids,
+						"state" : 10,
+						"isCheck" : 1,
+						"reviewerType" : 3, 
+						"msg" : "操作成功，已通过!"
+						
+					},
+					
+					traditional:true,
+					success: function(data) {
+						if(data.success) {
+							laysuccess(data.msg);
+							oTable1.fnDraw(false);
+							$("#checkAll").attr("checked",false);
+						} else {
+							layfail(data.msg);
+						}
+
+					}
+				});
+			})
+		}
+		/*详情*/
+		function salesOrderDetail(id) {
+			
+			$.ajax({
+				type: "post",
+				url: "/JLPSI/JLPSI/sales/salesOrder/salesOrderDetail",
+				dataType : "json",
+				data: {
+					"id" : id,
+					"type":1
+				},
+				success: function(res) {
+					let bill = new DetailBill(res);
+					let $content = bill.toPrint();
+					$("#lookDiv").html($content);
+				}
+			});
+			layer.open({
+				type: 1,
+				title: "销售订单详情",
+				closeBtn: 1,
+				area: ['100%', '100%'],
+				content: $("#lookDiv"),
+				btn: ['关闭']
+			});
+	}
+		/* 查看详情时的商品添加 */
+		function goodsAdd(index){
+			let goodsDiv=`<div class="row jl-panel" id="look_goodDiv`+index+`">
+				<div class="col-xs-6">
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">货品名称:</label>
+					<div class="col-xs-8 look_commodity_name">
+ 
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">单位:</label>
+					<div class="col-xs-8 look_base_unit">
+					</div>
+				</div>
+
+				<!--<div class="form-group">
+					<label for="" class="col-xs-4 control-label">返货数量:</label>
+					<div class="col-xs-8">
+					</div>
+				</div>-->
+
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">折扣%:</label>
+					<div class="col-xs-8 look_discount">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">税率:</label>
+					<div class="col-xs-8 look_taxes">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">金额:</label>
+					<div class="col-xs-8 look_deliver_goods_money">
+					</div>
+				</div>
+				<!--<div class="form-group">
+					<label for="" class="col-xs-4 control-label">签收金额:</label>
+					<div class="col-xs-8">
+					</div>
+				</div>-->
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">批号:</label>
+					<div class="col-xs-8 look_batch_number">
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">规格:</label>
+					<div class="col-xs-8 look_commodity_specification_name">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">规格编号:</label>
+					<div class="col-xs-8 look_commodity_specification_iden">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">发货数量:</label>
+					<div class="col-xs-8 look_deliver_goods_num">
+					</div>
+				</div>
+				<!--<div class="form-group">
+					<label for="" class="col-xs-4 control-label">签收数量:</label>
+					<div class="col-xs-8">
+					</div>
+				</div>-->
+
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">单价:</label>
+					<div class="col-xs-8 look_unit_price">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">税额:</label>
+					<div class="col-xs-8 look_taxes_money">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="" class="col-xs-4 control-label">备注:</label>
+					<div class="col-xs-8 look_remark">
+					</div>
+				</div>
+				<!--<div class="form-group">
+					<label for="" class="col-xs-4 control-label">折损金额:</label>
+					<div class="col-xs-8">
+					</div>
+				</div>-->
+
+			</div>
+		</div>`;
+		
+		$("#allGoodsDiv_look").append(goodsDiv);
+		}
+		
+	</script>
+</html>
